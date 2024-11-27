@@ -4,7 +4,7 @@ type = "javascript"
 [env.production]
 workers_dev = false
 route = "your-worker-url/*"
-account_id = "your-cloudflare-account-id"
+account_id = "4806f2425c6560e67d083f843b83dd5d"
 
 [[kv_namespaces]]
 binding = "THINGS_NAMESPACE"
