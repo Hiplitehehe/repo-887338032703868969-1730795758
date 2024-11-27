@@ -8,4 +8,4 @@ account_id = "4806f2425c6560e67d083f843b83dd5d"
 
 [[kv_namespaces]]
 binding = "THINGS_NAMESPACE"
-id = "your-kv-namespace-id"
+id = "0e07ec74248b4ff0a4121c4abb3c87fa"
