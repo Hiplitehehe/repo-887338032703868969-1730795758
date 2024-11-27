@@ -1,6 +1,8 @@
 name = "proud-morning-dc75"
 type = "javascript"
 
+compatibility_date = "2024-11-27"
+
 [env.production]
 workers_dev = false
 route = "https://proud-morning-dc75.hiplitehehe.workers.dev/*"
