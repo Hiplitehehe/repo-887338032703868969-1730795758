@@ -1,1 +1,11 @@
 name = "proud-morning-dc75"
+type = "javascript"
+
+[env.production]
+workers_dev = false
+route = "your-worker-url/*"
+account_id = "your-cloudflare-account-id"
+
+[[kv_namespaces]]
+binding = "THINGS_NAMESPACE"
+id = "your-kv-namespace-id"
