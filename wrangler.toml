@@ -3,7 +3,7 @@ type = "javascript"
 
 [env.production]
 workers_dev = false
-route = "your-worker-url/*"
+route = "https://proud-morning-dc75.hiplitehehe.workers.dev/*"
 account_id = "4806f2425c6560e67d083f843b83dd5d"
 
 [[kv_namespaces]]
