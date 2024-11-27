@@ -67,5 +67,5 @@ async function handleRequest(request, env) {
 }
 
 addEventListener("fetch", (event) => {
-  event.respondWith(handleRequest(event.request, ENV));
+  event.respondWith(handleRequest(event.request, event.env)); // Pass env here
 });
