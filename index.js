@@ -45,11 +45,14 @@ export default {
         const fileData = await fileResponse.json();
         const existingContent = JSON.parse(atob(fileData.content)); // Decode base64 content
 
-        // Modify the existing content with the new 'type'
-        existingContent.type = body.type; // Update the type field with new data
+        // Ensure existingContent is an array, if not, initialize it as an empty array
+        const typesList = Array.isArray(existingContent.types) ? existingContent.types : [];
+
+        // Add the new 'type' to the list
+        typesList.push(body.type);
 
         // Encode the updated content back to base64
-        const updatedContent = JSON.stringify(existingContent, null, 2);
+        const updatedContent = JSON.stringify({ types: typesList }, null, 2);
 
         // Update the GitHub file with the new data
         const updateResponse = await fetch(GITHUB_REPO_API, {
@@ -61,7 +64,7 @@ export default {
             "User-Agent": USER_AGENT,
           },
           body: JSON.stringify({
-            message: "Update type value",
+            message: "Update types list",
             content: btoa(updatedContent),  // Encode content as base64
             sha: sha,  // Use the file's SHA to update the content
           }),
@@ -80,7 +83,7 @@ export default {
 
         // Return success response
         return new Response(
-          JSON.stringify({ message: "Type has been updated", type: body.type }),
+          JSON.stringify({ message: "Type has been added", types: typesList }),
           { headers: { "Content-Type": "application/json" } }
         );
         
@@ -121,8 +124,10 @@ export default {
 
         const fileData = await fileResponse.json();
         const content = JSON.parse(atob(fileData.content)); // Decode base64 content
+
+        // Return the list of types stored
         return new Response(
-          JSON.stringify({ message: "The stored type is", type: content.type }),
+          JSON.stringify({ message: "The stored types are", types: content.types }),
           { headers: { "Content-Type": "application/json" } }
         );
       } catch (err) {
