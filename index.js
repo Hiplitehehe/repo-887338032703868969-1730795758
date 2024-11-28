@@ -32,11 +32,27 @@ export default {
           );
         }
 
-        // Construct the new content
-        const fileContent = JSON.stringify({ type: body.type }, null, 2);
-
-        // Update the GitHub file with the new data, preserving existing content
+        // Fetch the current content of the file
         const fileResponse = await fetch(GITHUB_REPO_API, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3+json",
+            "User-Agent": USER_AGENT,
+          },
+        });
+
+        const fileData = await fileResponse.json();
+        const existingContent = JSON.parse(atob(fileData.content)); // Decode base64 content
+
+        // Modify the existing content with the new 'type'
+        existingContent.type = body.type; // Update the type field with new data
+
+        // Encode the updated content back to base64
+        const updatedContent = JSON.stringify(existingContent, null, 2);
+
+        // Update the GitHub file with the new data
+        const updateResponse = await fetch(GITHUB_REPO_API, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -46,25 +62,25 @@ export default {
           },
           body: JSON.stringify({
             message: "Update type value",
-            content: btoa(fileContent),  // Encode content as base64
+            content: btoa(updatedContent),  // Encode content as base64
             sha: sha,  // Use the file's SHA to update the content
           }),
         });
 
-        const responseBody = await fileResponse.json();
+        const responseBody = await updateResponse.json();
 
         // Check if the update was successful
-        if (!fileResponse.ok) {
+        if (!updateResponse.ok) {
           console.error("GitHub API Error:", responseBody);
           return new Response(
             JSON.stringify({ error: "Failed to update file", details: responseBody }),
-            { status: fileResponse.status, headers: { "Content-Type": "application/json" } }
+            { status: updateResponse.status, headers: { "Content-Type": "application/json" } }
           );
         }
 
         // Return success response
         return new Response(
-          JSON.stringify({ message: "Type has been stored", type: body.type }),
+          JSON.stringify({ message: "Type has been updated", type: body.type }),
           { headers: { "Content-Type": "application/json" } }
         );
         
